@@ -62,7 +62,7 @@ class Perl(QMainWindow):
          for indice, ancho in enumerate((60, 100, 80, 30, 30, 30), start=0):
              self.ui.tabla.setColumnWidth(indice, ancho)
          
-         for indice, ancho in enumerate((35, 35, 30, 30, 30, 30, 30,30, 100,100,100,100), start=0):
+         for indice, ancho in enumerate((35, 35, 30, 30, 30, 30, 30,30, 125,110,120,100), start=0):
              self.ui.tablaView.setColumnWidth(indice, ancho)
          #self.ui.tablaView.horizontalHeader(columns)
          self.ui.tablaView.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -106,16 +106,19 @@ class Perl(QMainWindow):
                 valor = self.ui.tabla.item(f,2).text()
                 self.Predecesores.append(valor)
                 regex = re.search(r" |^[A-Z]{1}$|^[A-Z]{1}(,[A-Z]{1}){1,10}$", valor)
-    
                 if(regex == None):
-                    raise Exception('Ingrese correctamente los precedentes.\nEj: "A"  |  "A,B" .')
+                    raise Exception('Verifique que los predecesores sean correctos.\nEj: "A"  |  "A,B" .')
 
                 prede = regex.group()
                 listPrede = prede.split(sep=",")
                 for value in range(len(listPrede)):
                     if(listPrede[value] != " " and not(listPrede[value] in self.Actividades)):
-                        raise Exception(f'El valor "{listPrede[value]}" no corresponde a ninguna actividad existente')
-                                   
+                        raise Exception(f'El predecesor "{listPrede[value]}" no corresponde a ninguna actividad existente')
+
+                for j in range(3):
+                    if self.ui.tabla.item(f,j+3) == None:
+                        raise Exception('Revisar si falta un valor.\nEn: To, Tn, Tp')
+          
             #abrimos ventana para la fecha
             self.dialog = Dialog()
             self.dialog.show()
@@ -288,14 +291,6 @@ class Perl(QMainWindow):
             self.ui.tablaView.setItem(f, 7, celdaMLij)
             self.MLij.append(mlij)
         
-        
-            
-        # holgura = self.ui.tablaView.item(f, 7).text()
-        
-        # if int(holgura) == 0:
-        #     for i in range(filas):
-        #         for j in range(11):
-        #             self.ui.tablaView.item(i,j).setBackground(Qt.red)
 
     # Método: Obtine los días no laborables
     def getDiasNoLab(self):
